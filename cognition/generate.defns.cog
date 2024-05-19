@@ -1,0 +1,27 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+ordered-intersect ( ( index ) filter nip ) def
+index-intersect ( ( index ) map nip ) def
+ordered-index-intersect ( index-intersect ( ) filter ) def
+
+random-element ( size random vat ) def
+
+swap-index ( # seq i j --> 'seq
+  ( ( vat ) dip swap-vat ) keep set-vat ) def
+
+randomise ( # seq --> 'seq
+  size dup ( random swap-index ) curry each-integer ) def
+
+evolve-choose ( # seq inv-degree --> seq seq subseq subseq
+  ( dup2 size ( swap over random del swap -- ) ) dip times dup ) def
+
+evolve-set ( # seq seq subseq subseq-repermuted --> seq 'seq
+  ( ( ( vat ) drill ) dip set-vat ) 2each ) ) def
+
+evolve ( # seq inv-degree -- seq 'seq
+  evolve-choose randomise evolve-set def
+
+
+alpha-key-array 0 layout-size interval set
+random-layout ( alphabet fixed-keys cut randomise concat ) def
+random-key-array ( alpha-key-array fixed-keys split randomise compose ) def

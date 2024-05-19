@@ -1,0 +1,11 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+<meta-layout> ( # name creator layout --> [meta-layout]
+  [ ] curry3 cd "layout" swap def "creator" swap def "name" swap def uncd ) def
+
+# ".a.\n.b." --> ".a." ".b."
+parse-endl ( endl index cut srest ) def
+
+load-meta-layout ( # alphabet-array file -- meta-layout
+  fread ( parse-endl parse-endl ) drill
+  ( index ) filter nip <meta-layout> ) def

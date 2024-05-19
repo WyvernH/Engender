@@ -1,0 +1,45 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+# alphabet str --> alphabet idx
+[ ng>idx ] ( ( cindex ) ( swap alpha-len * + ) smap-reduce ) def
+
+[ (append-ng-next-digit) ] ( ( alpha-len mod ) ( ( swap - alpha-len / ) curry ) bi ) def
+
+# alphabet str num --> alphabet newstr newnum
+[ append-ng-char ] ( (append-ng-next-digit) ( ( cat ) drill precat ) swap bi ) def
+
+[ append-ng-idx ] ( (append-ng-next-digit) ( prepose ) swap bi ) def
+
+# note: if the given index is too high for the given ng-len, will output last ng-len substring of full ngram
+# alphabet ng-len idx --> str
+[ idx>ng ] ( "" ( append-ng-char ) 4spin times drop ) def
+
+# outputs array of alphabet indices instead of string
+[ idx>idx-ng ] ( [ ] ( append-ng-idx ) 4spin times drop ) def
+
+register-ngram ( # str -->
+  dup ( dup eval ++ quote def ) ( [[ one ]] def ) if-def ) def
+
+inc-ngram ( # alphabet corpus ngram --> alphabet ngram++ corpus--
+  rest swap 1cut ( [ index ] drill >char concat ) dip ) def
+
+stream-corpus-next ( # alphabet ngram corpus ( stream-corpus ) --> alphabet
+  ( swap ( register-ngram ) ( inc-ngram ) bi ) dip dup eval ) def
+
+stream-corpus ( # alphabet ngram corpus --> alphabet
+  ( ( len pos? ) dig ( stream-corpus-next ) ( drop2 register-ngram ) if ) dup eval ) def
+
+empty-ngram ( # ng-len --> ngram
+  ( "" zero >char ( concat ) curry ) dip times ) def
+
+load-corpus ( # ( [ ] ng-len alphabet corpus --> [corpus] alphabet
+  ( index ) cfilter ( swap empty-ngram ) dig inc-ngram
+  2push2 swap cd stream-corpus uncd swap ) def
+
+load-corpus-file ( fread len ( load-corpus ) ( drop ) if-pos ) def
+
+load-corpus-data ( # ( [ ] file -- [corpus] )
+  fread-csv ( push cd uncompose def uncd ) each cd clear uncd ) def
+
+write-corpus-data ( # ( [corpus] file -- [corpus] )
+  swap cd wordlist pop ( push cd dup unglue 2quote pop ) map fwrite-csv ) def

@@ -1,0 +1,15 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+"generate.defns" load
+
+default-analyse ( analyse-layout ) def # analyse-layout/analyse-key-array
+                                       # ( swap analyse-keyarray nipd )
+default-layout ( alphabet ) def # alphabet/random-layout
+default-key-array ( alpha-key-array ) # alpha-key-array/random-key-array
+default-layout-type ( default-layout ) # default-layout/default-key-array
+
+evolve-row ( # row --> score 'row
+
+optimise-row
+
+matrix-spread ( # matrix --> 'matrix

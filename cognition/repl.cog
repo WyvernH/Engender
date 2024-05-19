@@ -1,0 +1,5 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+[ repl ] dup3
+( "engender>" print read evalstr ssize ( endl print ? ) when-pos repl ) def
+( bequeath ) ( undef ) bi '( evalstr _ ( 1 crank eval ) ) def

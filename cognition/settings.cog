@@ -1,0 +1,16 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+\ set ( quote def ) def
+
+\ default-weights-file "./weights/weights.csv" set
+\ default-weight-data-file "./weights/weight-data.csv" set
+
+\ default-corpus-file "./corpus/corpus.txt" set
+\ default-corpus-data-file "./corpus/corpus-data.csv" set
+
+\ default-layouts-directory "./layouts" set
+
+\ alphabet "abcdefghijklmnopqrstuvwxyz,./'" set
+\ alpha-len 31 set
+\ layout-size 31 set
+\ fixed-keys 1 set

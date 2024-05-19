@@ -1,0 +1,1 @@
+This is an example of an English corpus file. It took about six hundred milliseconds to read.

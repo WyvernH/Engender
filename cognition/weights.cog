@@ -1,0 +1,50 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+# ( weights key1 key2 -- weights score )
+[ digraph-score ] ( swap layout-size * + vat ) def
+
+# ( current-len dskl dsmn dsij dsin -- new-len )
+[ ng-len-update ] ( -rot + - swap / 2 + ceil max ) def
+
+# ( current-len dskl weights i j m n -- new-len weights )
+[ ng-len-next ] (
+  rott ( digraph-score swap reach ) keep
+  digraph-score ( roll2 digraph-score ) dip
+  # current-len dskl dsmn weights dsij dsin
+  -rollt ng-len-update swap
+) def
+
+# ( weights -- ng-len weights )
+[ get-ng-len ] (
+  3 swap dup (
+    swap layout-size (
+      layout-size (
+        layout-size (
+          layout-size (
+            ng-len-next
+          ) each-integer
+        ) each-integer
+      ) each-integer
+    ) each-integer
+  ) each
+) def
+
+# ( file -- ng-len weights )
+[ load-weights ] (
+  fread read-csv [ ] ( compose ) reduce
+  size layout-size sq == ( "Bad weights file" ereturn ) unless
+  get-ng-len
+) def
+
+# ( file -- ng-len weights )
+[ load-weight-data ] (
+  fread read-csv size ( "Bad weight data file" ) when-zero
+  untake [ ] ( compose ) reduce
+  size layout-size sq == ( "Bad weight data file" ereturn ) unless
+) def
+
+# ( weights file -- )
+[ write-weights ] ( fwrite-csv ) def
+
+# ( ng-len weights file -- )
+[ write-weight-data ] ( ( ( quote ) layout-size \ mapn take ) dip fwrite-csv ) def

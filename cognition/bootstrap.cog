@@ -1,0 +1,26 @@
+ldfgldftgldfdtgl
+df 
+ 
+dfiff1 crank ing
+
+5 crank 2crank 2 crank
+1 crank unglue swap quote prepose def
+
+getd dup _ concat _ swap d i 
+_quote_swap_quote_compose_swap_dup_d_i eval 
+
+2crank ing 0 crank spc
+2crank ing 1 crank swap quote def
+2crank ing 0 crank endl
+2crank ing 1 crank swap quote def
+2crank ing 2 crank 13 itob cret
+2crank ing 1 crank swap quote def
+2crank ing 0 crank
+2crank ing 3 crank cogdir ../../cognition/coglib/ quote def ing
+2crank ing 0 crank
+2crank ing 1 crank cogdir stdquote.cog concat fread evalstr
+
+load ( ".cog" concat fread evalstr ) def
+cogload ( \ cogdir concat load ) def
+
+"engender" load

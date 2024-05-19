@@ -1,0 +1,13 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+# ( module-name -- )
+[ print-module-help ] (
+    [
+        [ "analyse" analyse-help ]
+        [ "generate" generate-help ]
+        [ "rank" rank-help ]
+        [ "corpus" corpus-help ]
+        [ "weights" weights-help ]
+        [ "repl" repl-help ]
+    ] case
+) def

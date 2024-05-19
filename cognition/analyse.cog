@@ -1,0 +1,41 @@
+# Copyright (C) 2024 Matthew Hinton.
+
+ng-recurse-final ( # cur time-sum weights ngraph --> newcur weights ngraph
+  last ( first ) dip ( digraph-score swap ( + max ) dip ) curry2 dip ) def
+
+ng-recurse-digraph ( # weights ngraph cutpoint n --> weights ngraph dscn
+  ( vat ) dip ( vat ) drill ( digraph-score ) drill2 ) def
+
+ng-recurse-next ( # cur weights ngraph n cutpoint time-sum --> newcur weights ngraph
+  ( swap ( ng-recurse-digraph ) keep swap ) dip + swap ng-recurse ) def
+
+(ng-recurse-case) ( # c.p. t.s. --> c.p. ng-size ( c.p. t.s. ng-recurse-next )
+  ( ( ++ ( size ) dig ) keep ) dip (( ng-recurse-next )) curry2 ) def
+
+ng-recurse ( # cur weights ngraph time-sum cutpoint --> newcur weights ngraph
+  swap ( (ng-recurse-case) each-integer-from ) ( -rot ng-recurse-final ) bi ) def
+
+# weights ngraph --> score weights ngraph
+ngraph-score ( zero -rot zero zero ng-recurse ) def
+
+# key-array ngram --> key-array ngraph
+ngram>ngraph ( unconcat ( >byte vat ) map ) def
+
+# weights key-array ngram --> key-array score weights ngraph
+ngram-score ( ngram>ngraph swapd ngraph-score ) def
+
+weighted-ngram-score ( # weights key-array sum [corpus] ngram --> weights key-array sum [corpus] score
+  ( ( ngram-score drop -rot ) 2drill ) ( swap ( push cd eval pop ) dip * ) bi ) def
+
+# alphabet-array layout --> alphabet-array key-array
+layout>key-array ( unconcat ( index ) map ) def
+
+# alphabet-array key-array --> alphabet-array layout
+key-array>layout ( ( vat ) map rejoin ) def
+
+# gives the time it takes to type the entire corpus using the given layout
+analyse-key-array ( # weights key-array [corpus] --> weights key-array [corpus] score
+  zero swap cd wordlist pop ( weighted-ngram-score swap ( + ) dip ) each ) def
+
+analyse-layout ( # weights [corpus] layout --> weights [corpus] score
+  alphabet unconcat swap layout>key-array nip swap analyse-key-array nipd ) def
